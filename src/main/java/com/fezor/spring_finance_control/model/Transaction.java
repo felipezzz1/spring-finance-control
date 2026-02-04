@@ -19,12 +19,16 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String description;
 
+    @Column(nullable = false)
     private BigDecimal amount;
 
+    @Column(nullable = false)
     private LocalDate date;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private TransactionType type;
 
