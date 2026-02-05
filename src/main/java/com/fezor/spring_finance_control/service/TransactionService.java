@@ -39,9 +39,16 @@ public class TransactionService {
         return transactionRepository.findAll();
     }
 
+    public BigDecimal sumAmountByType(TransactionType type) {
+        return transactionRepository.findByType(type)
+                .stream()
+                .map(Transaction::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
     public BigDecimal getTotalBalance() {
-        BigDecimal revenues = transactionRepository.sumAmountByType(TransactionType.REVENUE);
-        BigDecimal expenses = transactionRepository.sumAmountByType(TransactionType.EXPENSE);
+        BigDecimal revenues = sumAmountByType(TransactionType.REVENUE);
+        BigDecimal expenses = sumAmountByType(TransactionType.EXPENSE);
 
         revenues = (revenues != null) ? revenues : BigDecimal.ZERO;
         expenses = (expenses != null) ? expenses : BigDecimal.ZERO;
