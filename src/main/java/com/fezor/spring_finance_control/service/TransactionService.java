@@ -1,6 +1,8 @@
 package com.fezor.spring_finance_control.service;
 
 import com.fezor.spring_finance_control.dto.TransactionRequest;
+import com.fezor.spring_finance_control.dto.TransactionResponse;
+import com.fezor.spring_finance_control.mapper.TransactionMapper;
 import com.fezor.spring_finance_control.model.Category;
 import com.fezor.spring_finance_control.model.Transaction;
 import com.fezor.spring_finance_control.model.TransactionType;
@@ -11,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -19,17 +22,27 @@ public class TransactionService {
 
     private final TransactionRepository transactionRepository;
     private final CategoryRepository categoryRepository;
+    private final TransactionMapper mapper;
+
+    private void validateTransaction(TransactionRequest request) {
+
+        if(request.getAmount().compareTo(BigDecimal.ZERO) < 0) {
+            throw new RuntimeException("Transaction amount cannot be negative");
+        }
+
+        if(request.getDate().isAfter(LocalDate.now())){
+            throw new RuntimeException("Transaction date cannott be in the future");
+        }
+    }
 
     @Transactional
     public Transaction create(TransactionRequest request) {
         Category category = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found!"));
 
-        Transaction transaction = new Transaction();
-        transaction.setDescription(request.getDescription());
-        transaction.setAmount(request.getAmount());
-        transaction.setDate(request.getDate());
-        transaction.setType(request.getType());
+        validateTransaction(request);
+
+        Transaction transaction = mapper.toEntity(request);
         transaction.setCategory(category);
 
         return transactionRepository.save(transaction);
@@ -37,6 +50,33 @@ public class TransactionService {
 
     public List<Transaction> findAll() {
         return transactionRepository.findAll();
+    }
+
+    public Transaction findById(Long id){
+        return transactionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Transaction not Found"));
+    }
+
+    public Transaction update(Long id, TransactionRequest request) {
+
+        Transaction transaction = findById(id);
+        Category category = categoryRepository.findById(request.getCategoryId())
+                .orElseThrow(() -> new RuntimeException("Category not Found"));
+
+        validateTransaction(request);
+
+        transaction.setDescription(request.getDescription());
+        transaction.setAmount(request.getAmount());
+        transaction.setDate(request.getDate());
+        transaction.setType(request.getType());
+        transaction.setCategory(category);
+
+        return transaction;
+    }
+
+    public void delete(Long id) {
+        Transaction transaction = findById(id);
+        transactionRepository.delete(transaction);
     }
 
     public BigDecimal sumAmountByType(TransactionType type) {

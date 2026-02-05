@@ -32,4 +32,21 @@ public class TransactionController {
         List<Transaction> transactions = service.findAll();
         return mapper.toResponseList(transactions);
     }
+
+    @GetMapping("/{id}")
+    public TransactionResponse findById(@PathVariable Long id){
+        return mapper.toResponse(service.findById(id));
+    }
+
+    @PutMapping("/{id}")
+    public TransactionResponse update(@PathVariable Long id, @Valid @RequestBody TransactionRequest request){
+        Transaction updatedTransaction = service.update(id, request);
+        return mapper.toResponse(updatedTransaction);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id){
+        service.delete(id);
+    }
 }
