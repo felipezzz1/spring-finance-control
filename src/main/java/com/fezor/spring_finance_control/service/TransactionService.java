@@ -71,7 +71,7 @@ public class TransactionService {
         transaction.setType(request.getType());
         transaction.setCategory(category);
 
-        return transaction;
+        return transactionRepository.save(transaction);
     }
 
     public void delete(Long id) {
