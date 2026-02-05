@@ -20,4 +20,20 @@ public class CategoryService {
     public List<Category> findAll() {
         return categoryRepository.findAll();
     }
+
+    public Category findById(Long id) {
+        return categoryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Category not Found"));
+    }
+
+    public Category update(Long id, Category categoryUpdated) {
+        Category category = findById(id);
+        category.setName(categoryUpdated.getName());
+        return categoryRepository.save(category);
+    }
+
+    public void delete(Long id) {
+        Category category = findById(id);
+        categoryRepository.delete(category);
+    }
 }
