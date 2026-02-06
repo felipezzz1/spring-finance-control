@@ -8,8 +8,10 @@ import com.fezor.spring_finance_control.service.TransactionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -21,32 +23,37 @@ public class TransactionController {
     private final TransactionMapper mapper;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public TransactionResponse create(@Valid @RequestBody TransactionRequest request) {
+    public ResponseEntity<TransactionResponse> create(@Valid @RequestBody TransactionRequest request) {
+
         Transaction transaction = service.create(request);
-        return mapper.toResponse(transaction);
+
+        URI location = URI.create("api/v1/transactions" + transaction.getId());
+
+        return  ResponseEntity.created(location)
+                .body(mapper.toResponse(transaction));
     }
 
     @GetMapping
-    public List<TransactionResponse> findAll() {
+    public ResponseEntity<List<TransactionResponse>> findAll() {
         List<Transaction> transactions = service.findAll();
-        return mapper.toResponseList(transactions);
+        return ResponseEntity.ok(mapper.toResponseList(transactions));
     }
 
     @GetMapping("/{id}")
-    public TransactionResponse findById(@PathVariable Long id){
-        return mapper.toResponse(service.findById(id));
+    public ResponseEntity<TransactionResponse> findById(@PathVariable Long id){
+        return ResponseEntity.ok(mapper.toResponse(service.findById(id)));
     }
 
     @PutMapping("/{id}")
-    public TransactionResponse update(@PathVariable Long id, @Valid @RequestBody TransactionRequest request){
+    public ResponseEntity<TransactionResponse> update(@PathVariable Long id, @Valid @RequestBody TransactionRequest request){
         Transaction updatedTransaction = service.update(id, request);
-        return mapper.toResponse(updatedTransaction);
+        return ResponseEntity.ok(mapper.toResponse(updatedTransaction));
     }
 
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id){
+    public ResponseEntity<Void> delete(@PathVariable Long id){
         service.delete(id);
+
+        return ResponseEntity.noContent().build();
     }
 }
