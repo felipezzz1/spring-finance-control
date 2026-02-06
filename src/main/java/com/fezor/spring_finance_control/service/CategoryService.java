@@ -1,5 +1,7 @@
 package com.fezor.spring_finance_control.service;
 
+import com.fezor.spring_finance_control.dto.CategoryRequest;
+import com.fezor.spring_finance_control.mapper.CategoryMapper;
 import com.fezor.spring_finance_control.model.Category;
 import com.fezor.spring_finance_control.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,8 +14,12 @@ import java.util.List;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final CategoryMapper mapper;
 
-    public Category create(Category category) {
+    public Category create(CategoryRequest request) {
+
+        Category category = mapper.toEntity(request);
+
         return categoryRepository.save(category);
     }
 
@@ -26,9 +32,11 @@ public class CategoryService {
                 .orElseThrow(() -> new RuntimeException("Category not Found"));
     }
 
-    public Category update(Long id, Category categoryUpdated) {
+    public Category update(Long id, CategoryRequest request) {
         Category category = findById(id);
-        category.setName(categoryUpdated.getName());
+
+        category.setName(request.getName());
+
         return categoryRepository.save(category);
     }
 
