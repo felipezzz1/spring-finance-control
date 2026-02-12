@@ -1,7 +1,6 @@
 package com.fezor.spring_finance_control.service;
 
 import com.fezor.spring_finance_control.dto.TransactionRequest;
-import com.fezor.spring_finance_control.dto.TransactionResponse;
 import com.fezor.spring_finance_control.mapper.TransactionMapper;
 import com.fezor.spring_finance_control.model.Category;
 import com.fezor.spring_finance_control.model.Transaction;
@@ -31,7 +30,7 @@ public class TransactionService {
         }
 
         if(request.getDate().isAfter(LocalDate.now())){
-            throw new RuntimeException("Transaction date cannott be in the future");
+            throw new RuntimeException("Transaction date cannot be in the future");
         }
     }
 

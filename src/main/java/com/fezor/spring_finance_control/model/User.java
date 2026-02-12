@@ -1,6 +1,7 @@
 package com.fezor.spring_finance_control.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,7 @@ public class User {
     @Column(nullable = false)
     private String username;
 
+    @Email
     @Column(unique = true, nullable = false)
     private String email;
 
