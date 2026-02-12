@@ -43,7 +43,8 @@ public class UserService {
     }
 
     public User findByEmail(String email) {
-        return repository.findByEmail(email);
+        return repository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not Found"));
     }
 
     public User findByUsername(String username) {
