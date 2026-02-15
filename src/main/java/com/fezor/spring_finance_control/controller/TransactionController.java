@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
@@ -27,7 +28,11 @@ public class TransactionController {
 
         Transaction transaction = service.create(request);
 
-        URI location = URI.create("api/v1/transactions" + transaction.getId());
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(transaction.getId())
+                .toUri();
 
         return  ResponseEntity.created(location)
                 .body(mapper.toResponse(transaction));

@@ -58,6 +58,11 @@ public class TransactionService {
         return transactionRepository.findAll();
     }
 
+    public List<Transaction> findByUserId(Long id){
+        return transactionRepository.findByUserId(id)
+                .orElseThrow(() -> new RuntimeException("User not Found"));
+    }
+
     public Transaction findById(Long id){
         return transactionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Transaction not Found"));

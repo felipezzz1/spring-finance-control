@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
@@ -25,7 +26,11 @@ public class UserController {
     public ResponseEntity<UserResponse> create(@Valid @RequestBody UserRequest request) {
         User user = service.create(request);
 
-        URI location = URI.create("api/v1/users" + user.getId());
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(user.getId())
+                .toUri();
 
         return ResponseEntity.created(location)
                 .body(mapper.toResponse(user));
