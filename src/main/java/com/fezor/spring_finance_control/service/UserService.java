@@ -32,6 +32,8 @@ public class UserService {
 
         User user = mapper.toEntity(request);
 
+        user.setPassword(encoder.encode(request.getPassword()));
+
         return repository.save(user);
     }
 
