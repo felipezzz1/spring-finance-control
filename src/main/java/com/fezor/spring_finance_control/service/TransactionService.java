@@ -5,8 +5,10 @@ import com.fezor.spring_finance_control.mapper.TransactionMapper;
 import com.fezor.spring_finance_control.model.Category;
 import com.fezor.spring_finance_control.model.Transaction;
 import com.fezor.spring_finance_control.model.TransactionType;
+import com.fezor.spring_finance_control.model.User;
 import com.fezor.spring_finance_control.repository.CategoryRepository;
 import com.fezor.spring_finance_control.repository.TransactionRepository;
+import com.fezor.spring_finance_control.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ public class TransactionService {
 
     private final TransactionRepository transactionRepository;
     private final CategoryRepository categoryRepository;
+    private final UserRepository userRepository;
     private final TransactionMapper mapper;
 
     private void validateTransaction(TransactionRequest request) {
@@ -39,10 +42,14 @@ public class TransactionService {
         Category category = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found!"));
 
+        User user = userRepository.findById(request.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found!"));
+
         validateTransaction(request);
 
         Transaction transaction = mapper.toEntity(request);
         transaction.setCategory(category);
+        transaction.setUser(user);
 
         return transactionRepository.save(transaction);
     }
@@ -62,6 +69,9 @@ public class TransactionService {
         Category category = categoryRepository.findById(request.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not Found"));
 
+        User user = userRepository.findById(request.getUserId())
+                    .orElseThrow(() -> new RuntimeException("User not Found"));
+
         validateTransaction(request);
 
         transaction.setDescription(request.getDescription());
@@ -69,6 +79,7 @@ public class TransactionService {
         transaction.setDate(request.getDate());
         transaction.setType(request.getType());
         transaction.setCategory(category);
+        transaction.setUser(user);
 
         return transactionRepository.save(transaction);
     }

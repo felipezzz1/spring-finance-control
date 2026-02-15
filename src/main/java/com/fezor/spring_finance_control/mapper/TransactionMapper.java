@@ -11,6 +11,7 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface TransactionMapper {
     @Mapping(source = "category.name", target = "categoryName")
+    @Mapping(source = "user.username", target = "username")
     TransactionResponse toResponse(Transaction transaction);
 
     List<TransactionResponse> toResponseList(List<Transaction> transactions);

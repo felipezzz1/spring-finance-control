@@ -14,4 +14,5 @@ public class TransactionResponse {
     private LocalDate date;
     private String type;
     private String categoryName;
+    private String username;
 }

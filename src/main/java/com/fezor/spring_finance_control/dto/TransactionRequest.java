@@ -27,4 +27,7 @@ public class TransactionRequest {
 
     @NotNull(message = "The category ID is mandatory")
     private Long categoryId;
+
+    @NotNull(message = "The User ID is mandatory")
+    private Long userId;
 }
