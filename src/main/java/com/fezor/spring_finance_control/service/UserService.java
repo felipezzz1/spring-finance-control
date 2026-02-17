@@ -1,6 +1,7 @@
 package com.fezor.spring_finance_control.service;
 
 import com.fezor.spring_finance_control.dto.UserRequest;
+import com.fezor.spring_finance_control.dto.UserResponse;
 import com.fezor.spring_finance_control.mapper.UserMapper;
 import com.fezor.spring_finance_control.model.User;
 import com.fezor.spring_finance_control.repository.UserRepository;
@@ -50,7 +51,8 @@ public class UserService {
     }
 
     public User findByUsername(String username) {
-        return (User) repository.findByUsername(username);
+        return repository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not Found"));
     }
 
     public User update(Long id, UserRequest request) {
