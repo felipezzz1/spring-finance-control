@@ -2,12 +2,9 @@ package com.fezor.spring_finance_control.controller;
 
 import com.fezor.spring_finance_control.dto.LoginRequest;
 import com.fezor.spring_finance_control.dto.LoginResponse;
-import com.fezor.spring_finance_control.dto.UserResponse;
-import com.fezor.spring_finance_control.model.User;
 import com.fezor.spring_finance_control.service.AuthService;
 import com.fezor.spring_finance_control.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
